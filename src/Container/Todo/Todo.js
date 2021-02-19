@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AddTodo from "../../Components/AddTodo/AddTodo";
-import { DisplayTodo } from "../../Components/DisplayTodo/DisplayTodo";
+import DisplayTodo from "../../Components/DisplayTodo/DisplayTodo";
+import Spinner from "../../Components/Spinner/Spinner";
 import {
   addTask,
   changeInputValue,
@@ -33,6 +34,7 @@ const Todo = () => {
   return (
     <div>
       <AddTodo value={state.inputTask} change={changeHandler} add={postTask} />
+      {state.loading && <Spinner />}
       {state.todoList.map((elem) => {
         return (
           <DisplayTodo

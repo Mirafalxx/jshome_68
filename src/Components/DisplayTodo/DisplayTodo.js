@@ -1,7 +1,7 @@
 import React from "react";
 import "./DisplayTodo.css";
 
-export const DisplayTodo = ({ taskName, deleteBtn }) => {
+const DisplayTodo = ({ taskName, deleteBtn }) => {
   return (
     <div className="TodoList">
       <p className="taskName">{taskName}</p>
@@ -11,3 +11,5 @@ export const DisplayTodo = ({ taskName, deleteBtn }) => {
     </div>
   );
 };
+
+export default DisplayTodo;
