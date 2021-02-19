@@ -1,33 +1,81 @@
+import axios from "axios";
 import axiosTodoURL from "../axiosTodoURL";
 
 export const ADD_TASK = "ADD_TASK";
 export const CHANGE_INPUT_VALUE = "CHANGE_INPUT_VALUE";
 
-export const addTask = () => ({ type: ADD_TASK });
-export const changeInputValue = () => ({ type: CHANGE_INPUT_VALUE });
+export const POST_TODO_REQUEST = "POST_TODO_REQUEST";
+export const DELETE_TODO_REQUEST = "DELETE_TODO_REQUEST";
+export const GET_TODO_REQUEST = "GET_TODO_REQUEST";
+export const GET_TODO_SUCCESS = "GET_TODO_SUCCESS";
+export const GET_TODO_FAILURE = "GET_TODO_FAILURE";
 
-export const FETCH_TODOLIST_REQUEST = "FETCH_TODOLIST_REQUEST";
-export const FETCH_TODOLIST_SUCCESS = "FETCH_TODOLIST_SUCCESS";
-export const FETCH_TODOLIST_FAILURE = "FETCH_TODOLIST_FAILURE";
+export const postTodoRequest = () => ({ type: POST_TODO_REQUEST });
+//
+export const deleteTodoRequest = () => ({ type: DELETE_TODO_REQUEST });
+//
 
-export const fetchTodoListRequest = () => ({ type: FETCH_TODOLIST_REQUEST });
-export const fetchTodoListSuccess = (todos) => ({
-  type: FETCH_TODOLIST_SUCCESS,
+export const changeInputValue = (value) => ({
+  type: CHANGE_INPUT_VALUE,
+  value,
+});
+export const getTodoRequest = () => ({ type: GET_TODO_REQUEST });
+export const getTodoSuccess = (todos) => ({
+  type: GET_TODO_SUCCESS,
   todos,
 });
+export const getTodoFailure = () => ({ type: GET_TODO_FAILURE });
 
-export const fetchTodoListFailure = () => ({ type: FETCH_TODOLIST_FAILURE });
-
-export const fetchTodoList = () => {
+export const getTask = () => {
   return async (dispatch) => {
-    dispatch(fetchTodoListRequest);
+    dispatch(getTodoRequest());
 
     try {
-      const response = await axiosTodoURL.get;
-      //   console.log(response);
-      dispatch(fetchTodoListSuccess(response.data));
+      const response = await axios.get(
+        `https://blog-mirafal-default-rtdb.firebaseio.com/task.json`
+      );
+      const fetchedTodoList = [];
+      if (response.data !== null) {
+        for (let key in response.data) {
+          fetchedTodoList.unshift({
+            ...response.data[key],
+            id: key,
+          });
+        }
+      }
+      console.log(fetchedTodoList);
+      dispatch(getTodoSuccess(fetchedTodoList));
     } catch (e) {
-      dispatch(fetchTodoListFailure());
+      dispatch(getTodoFailure());
+    }
+  };
+};
+
+export const deleteTask = (id) => {
+  return async (dispatch) => {
+    dispatch(deleteTodoRequest());
+
+    try {
+      await axios.delete(
+        `https://blog-mirafal-default-rtdb.firebaseio.com/task/${id}.json`
+      );
+      // await getTask();
+    } finally {
+      await getTask();
+    }
+  };
+};
+
+export const addTask = (value) => {
+  return async (dispatch) => {
+    dispatch(postTodoRequest());
+    try {
+      await axios.post(
+        `https://blog-mirafal-default-rtdb.firebaseio.com/task.json`,
+        { createdAt: new Date().toISOString().slice(0, 10), value }
+      );
+    } catch (e) {
+      console.log(e);
     }
   };
 };

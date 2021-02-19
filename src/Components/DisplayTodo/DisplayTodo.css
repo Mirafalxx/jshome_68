@@ -1,0 +1,21 @@
+.TodoList {
+  display: flex;
+  width: 320px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  margin: 0 auto;
+  margin-top: 10px;
+  justify-content: space-around;
+}
+.TodoList:hover {
+  background-color: rgb(230, 230, 230);
+}
+.taskName {
+  width: 20%;
+}
+.deleteBtn {
+  width: 20%;
+}
+.deleteBtn:hover {
+  cursor: pointer;
+}
